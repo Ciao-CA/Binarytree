@@ -1,0 +1,80 @@
+#include<iostream>
+using namespace std;
+
+class Bnode {
+	friend class Btree;
+private:
+	Bnode *left;
+	Bnode *right;
+	int val;
+public:
+	Bnode(int v)
+	{
+		val = v;
+	}
+	Bnode(int v, Bnode *l, Bnode *r)
+	{
+		val = v;
+		left = l;
+		right = r;
+	}
+	int weight()
+	{
+		return val;
+	}
+	~Bnode() {}
+};
+
+int max(int a, int b)
+{
+	return a > b ? a : b;
+}
+
+class Btree{
+private:
+	Bnode *root;
+public:
+	Btree()
+	{
+		root = NULL;
+	}
+	void CreateTree(Bnode *&r)
+	{
+		int c;
+		cin >> c;
+		if (c != -1)
+		{
+			r = new Bnode(c);
+			CreateTree(r->left);
+			CreateTree(r->right);
+		}
+	}
+	void PreOrder(Bnode* &r)
+	{
+		if (r)
+		{
+			cout << r->weight() << " ";
+			PreOrder(r->left);
+			PreOrder(r->right);
+		}
+	}
+	int height(Bnode *&r)
+	{
+		if (r == NULL)return 0;
+		else
+		{
+			return 1 + max(height(r->left), height(r->right));
+		}
+	}
+};
+
+int main()
+{
+	Btree *ss;
+	Btree s3;
+	ss = &s3;
+	Bnode *s;
+	ss->CreateTree(s);
+	cout << ss->height(s);
+	return 0;
+}
