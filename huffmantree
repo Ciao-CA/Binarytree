@@ -1,0 +1,83 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+using namespace std;
+
+
+class Hftree {
+private:
+	int val;
+	char sym;
+	Hftree* left;
+	Hftree* right;
+public:
+	Hftree(int v, char s, Hftree *l, Hftree *r)
+	{
+		val = v;
+		sym = s;
+		left = l;
+		right = r;
+	}
+
+	~Hftree()
+	{
+
+	}
+	int weight()
+	{
+		return val;
+	}
+	void PreOrder(Hftree *r)
+	{
+		if (r)
+		{
+			cout << r->val << " " << r->sym << "\t";
+			PreOrder(r->left);
+			PreOrder(r->right);
+		}
+	}
+};
+
+class cmp {
+public:
+	bool operator()(Hftree*l, Hftree *r)
+	{
+		return l->weight() > r->weight();
+	}
+};
+
+Hftree* CreateHftree(int v[], char s[], int n)
+{
+	priority_queue < Hftree*, vector<Hftree*>, cmp> Q;
+	for (int i = 0; i < n; i++)
+	{
+		Hftree *r = new Hftree(v[i], s[i], NULL, NULL);
+		Q.push(r);
+	}
+	while (Q.size() > 1)
+	{
+		Hftree *lc = Q.top();
+		Q.pop();
+		Hftree *rc = Q.top();
+		Q.pop();
+		Hftree *parent = new Hftree(lc->weight() + rc->weight(), 't', lc, rc);
+		Q.push(parent);
+	}
+	return Q.top();
+}
+
+int main()
+{
+	Hftree *r;
+	int n;
+	cin >> n;
+	int *v = new int[n + 1];
+	char *s = new char[n + 1];
+	for (int i = 0; i < n; i++)
+	{
+		cin >> s[i] >> v[i];
+	}
+	r = CreateHftree(v, s, n);
+	r->PreOrder(r);
+	return 0;
+}
